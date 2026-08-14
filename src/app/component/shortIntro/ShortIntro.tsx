@@ -14,7 +14,7 @@
         
         {/* Text container - 60% width with animation */}
         <div className='w-[60%] space-y-4 animate-slide-in-right'>
-          <h2 className='text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-600 to-red-600 bg-clip-text text-transparent'>
+          <h2 className='text-3xl md:text-4xl font-bold text-black dark:bg-gradient-to-r dark:from-purple-600 dark:to-red-600 dark:bg-clip-text dark:text-transparent'>
             Your Imagination, Our Collection
           </h2>
           <p className='text-lg leading-relaxed text-gray-700 dark:text-white'>
@@ -23,7 +23,7 @@
           <p className='text-lg leading-relaxed text-gray-700 dark:text-white'>
             We provide a wide range of high-quality cosplay costumes for rent, from anime and superheroes to traditional and wedding attire.
           </p>
-          <p className='text-xl font-semibold text-purple-600 dark:text-purple-400 mt-4'>
+          <p className='text-xl font-semibold text-black dark:bg-gradient-to-r dark:from-purple-600 dark:to-red-600 dark:bg-clip-text dark:text-transparent'>
             With 1000+ collections, truly <span className='italic text-red-600 dark:text-red-400'>Unik Loh!</span>
           </p>
         </div>

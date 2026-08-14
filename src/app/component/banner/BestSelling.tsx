@@ -13,7 +13,7 @@ const BestSelling = () => {
   >
     {/* Title with enhanced styling */}
     <div className="mb-12 animate-fade-in">
-      <h2 className="text-4xl md:text-5xl font-bold tracking-wide mb-3 bg-gradient-to-r from-purple-600 via-red-600 to-blue-600 bg-clip-text text-transparent">
+      <h2 className="text-4xl md:text-5xl font-bold tracking-wide mb-3  text-black dark:bg-gradient-to-r dark:from-purple-600 dark:to-red-600 dark:bg-clip-text dark:text-transparent">
         BEST SELLING ITEMS
       </h2>
       <div className="flex items-center justify-center gap-4 mt-4">
