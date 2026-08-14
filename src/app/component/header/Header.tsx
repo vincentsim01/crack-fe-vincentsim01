@@ -132,7 +132,7 @@ const Header = () => {
           </div>
         </div>
 
-        <div className='hidden md:flex'>
+        <div className='hidden md:flex md:items-center'>
 
           <span className='mr-4 cursor-pointer hover:underline active:scale-95'><Link href='/Contact/'>Contact Us</Link></span> 
             <Link href='/user'>
