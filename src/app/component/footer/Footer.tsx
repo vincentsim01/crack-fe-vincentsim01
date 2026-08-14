@@ -11,7 +11,7 @@ const Footer = () => {
       }}
     >
       <div className='w-full md:w-[65%] inline-block'>
-          <div className='bottom-0 z-50 shadow h-[50vh] text-center  md:flex items-center justify-center font-bold'
+          <div className='bottom-0 z-50 shadow h-[50vh] text-center md:flex md:items-start md:justify-center md:m-15 font-bold'
                   // style={{
                   //     background: "var(--foreground)",
                   //     color: "var(--background)",
