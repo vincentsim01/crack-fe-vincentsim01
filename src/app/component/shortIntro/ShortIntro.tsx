@@ -17,10 +17,10 @@
           <h2 className='text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-600 to-red-600 bg-clip-text text-transparent'>
             Your Imagination, Our Collection
           </h2>
-          <p className='text-lg leading-relaxed text-gray-700 dark:text-gray-300'>
+          <p className='text-lg leading-relaxed text-gray-700 dark:text-white'>
             Unikloh offers an easy and convenient solution for people to escape mundaneness and enter the world of their imagination. 
           </p>
-          <p className='text-lg leading-relaxed text-gray-700 dark:text-gray-300'>
+          <p className='text-lg leading-relaxed text-gray-700 dark:text-white'>
             We provide a wide range of high-quality cosplay costumes for rent, from anime and superheroes to traditional and wedding attire.
           </p>
           <p className='text-xl font-semibold text-purple-600 dark:text-purple-400 mt-4'>
