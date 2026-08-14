@@ -89,26 +89,17 @@ const page = () => {
 
         {fetchedData.map((item:any)=>{
           return (
-            <div className='m-5 p-6 md:w-[30%] w-[35%] flex flex-col items-center rounded-xl shadow-lg bg-white hover:shadow-2xl hover:scale-105 transition-transform duration-300' key={item.id}>
-              <Link href={`/Products/${item.id}`} className="w-full text-center mb-5">              
-
-                <img className='w-full h-full object-cover rounded-lg' src={item.image} alt={item.title} width={150} height={150}/> 
-                <br></br>  
-                <h2 className="text-2xl font-semibold text-gray-800 mb-2 hover:text-red-600 transition-colors duration-200">{item.title}</h2>  
-
-                <br></br>         
-                <div className="text-xl font-bold text-gray-900 mb-8">${item.price}</div>
+            <div className='m-5 h-[70svh] p-6 md:w-[30%] w-[35%] flex flex-col items-center rounded-xl shadow-lg bg-white hover:shadow-2xl hover:scale-105 transition-transform duration-300' key={item.id}>
+              <Link href={`/Products/${item.id}`} className="flex min-h-0 w-full flex-1 flex-col text-center">              
+                <img className='min-h-0 w-full flex-1 object-cover rounded-lg' src={item.image} alt={item.title} width={150} height={150}/> 
+                <h2 className="mt-4 text-2xl font-semibold text-gray-800 hover:text-red-600 transition-colors duration-200">{item.title}</h2>  
+                <div className="mt-2 text-xl font-bold text-gray-900">${item.price}</div>
               </Link>
-              <br></br>
-              <br></br>
-              <br></br>
-              <br></br>
-              <br></br>
-              <br></br>
-                <div className="mt-4 mb-4 w-full text-center">
+                <div className="mt-4 w-full flex justify-center gap-4">
                     <AddToCartButton product={item} />
+                    <FormDeleteProduct productId={item.id} />
                 </div>
-              <FormDeleteProduct productId={item.id} />
+
               {/* <FormUpdateProduct
                   productId={item?.id} 
                   productTitle={item?.title} 
