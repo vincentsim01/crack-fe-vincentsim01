@@ -3,11 +3,7 @@ import { api } from '@/lib/api/api';
 import AddToCartButton from '../component/addtocartbutton/AddToCartButton';
 import { useState, useEffect } from 'react';
 import Link from "next/link";
-import {Product} from '@/types/product'
 import FormDeleteProduct from '@/app/component/formDeleteProduct/page';
-import { updateProduct } from '@/types/product';
-import {FormUpdateProduct} from '@/app/component/formUpdateProduct/FormUpdateProduct';
-import {MockProducts} from '@/app/data/Product';
 import BannerCosplayNight from '../component/banner/BannerCosplayNight';
 
 export async function deleteProductAction(id: number) {
@@ -42,112 +38,102 @@ const page = () => {
     <>
     <BannerCosplayNight></BannerCosplayNight>
 
-    <div className='m-4'   
+    <main className='mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8'   
     style={{
       background: "var(--background)",
       color: "var(--foreground)",
     }}
     >
-    <div className='m-4 flex gap-6 justify-center items-center flex-wrap'>
+    <div className='mb-8 flex items-center justify-between border-b border-black/15 pb-4'>
+      <div>
+        <p className='text-xs font-medium uppercase tracking-[0.16em] text-red-600'>Product catalogue</p>
+        <h1 className='mt-1 text-2xl font-semibold text-black dark:text-white'>Featured products</h1>
+      </div>
+      <p className='text-sm text-black/60 dark:text-white/60'>Showing {fetchedData.length} products</p>
+    </div>
+
+    <div className='mb-8 flex items-center justify-center gap-3'>
       <button 
-        className="group relative px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold rounded-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-red-500/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none" 
+        className="inline-flex items-center gap-2 border border-black/20 px-4 py-2 text-sm font-medium transition-colors hover:bg-black hover:text-white disabled:cursor-not-allowed disabled:opacity-40" 
         onClick={() => setLimit(Math.max(12, limit - 12))}
         disabled={limit <= 12}
       >
-        <span className="relative z-10 flex items-center gap-2">
-          <svg className="w-5 h-5 transform group-hover:-translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <span className="flex items-center gap-2">
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          Previous ({Math.max(12, limit - 12)})
+          Previous
         </span>
-        <div className="absolute inset-0 bg-gradient-to-r from-red-700 to-red-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </button>
-      
-      <div className='flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-purple-100 to-red-100 dark:from-purple-900/30 dark:to-red-900/30 rounded-lg shadow-md'>
-        <span className='font-bold text-lg bg-gradient-to-r from-purple-600 to-red-600 bg-clip-text text-transparent'>Showing:</span>
-        <span className='text-2xl font-bold text-red-600 dark:text-red-400 animate-pulse-slow'>{limit}</span>
-      </div>
-      
       <button 
-        className="group relative px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold rounded-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-red-500/50" 
+        className="inline-flex items-center gap-2 bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700" 
         onClick={() => setLimit(limit + 12)}
       >
-        <span className="relative z-10 flex items-center gap-2">
-          Next ({limit + 12})
-          <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <span className="flex items-center gap-2">
+          Next
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </span>
-        <div className="absolute inset-0 bg-gradient-to-r from-red-700 to-red-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </button>
     </div>
 
     {loading && <div className='text-center py-8 text-lg'>Loading products...</div>}
     {error && <div className='text-center py-8 text-lg text-red-600'>Error: {error}</div>}
 
-        <div className='flex flex-wrap '>
+        <div className='grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 sm:gap-x-4 lg:grid-cols-4 lg:gap-x-5'>
 
         {fetchedData.map((item:any)=>{
           return (
-            <div className='m-5 h-[70svh] p-6 md:w-[30%] w-[35%] flex flex-col items-center rounded-xl shadow-lg bg-white hover:shadow-2xl hover:scale-105 transition-transform duration-300' key={item.id}>
-              <Link href={`/Products/${item.id}`} className="flex min-h-0 w-full flex-1 flex-col text-center">              
-                <img className='min-h-0 w-full flex-1 object-cover rounded-lg' src={item.image} alt={item.title} width={150} height={150}/> 
-                <h2 className="mt-4 text-2xl font-semibold text-gray-800 hover:text-red-600 transition-colors duration-200">{item.title}</h2>  
-                <div className="mt-2 text-xl font-bold text-gray-900">${item.price}</div>
+            <article className='group min-w-0' key={item.id}>
+              <Link href={`/Products/${item.id}`} className="block">
+                <div className='aspect-[4/5] overflow-hidden bg-zinc-100'>
+                  <img className='h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]' src={item.image} alt={item.title} width={400} height={500}/> 
+                </div>
+                <div className='pt-3'>
+                  <p className='text-[11px] text-black/55 dark:text-white/55'>Women, XS-XXL</p>
+                  <h2 className="mt-1 truncate text-sm font-medium text-black hover:text-red-600 dark:text-white">{item.title}</h2>
+                  <div className="mt-1 text-sm font-semibold text-red-600">${item.price}</div>
+                  <p className='mt-1 text-[11px] text-black/55 dark:text-white/55'>Limited store collection</p>
+                </div>
               </Link>
-                <div className="mt-4 w-full flex justify-center gap-4">
+                <div className="mt-3 flex items-center gap-2">
                     <AddToCartButton product={item} />
                     <FormDeleteProduct productId={item.id} />
                 </div>
-
-              {/* <FormUpdateProduct
-                  productId={item?.id} 
-                  productTitle={item?.title} 
-                  productPrice={item?.price} 
-                  productDescription={item?.description} 
-              /> */}
-            </div>
+            </article>
           )
         })}
 
         </div>
 
-            <div className='m-4 flex gap-6 justify-center items-center flex-wrap'>
+            <div className='mt-10 flex items-center justify-center gap-3'>
       <button 
-        className="group relative px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold rounded-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-red-500/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none" 
+        className="inline-flex items-center gap-2 border border-black/20 px-4 py-2 text-sm font-medium transition-colors hover:bg-black hover:text-white disabled:cursor-not-allowed disabled:opacity-40" 
         onClick={() => setLimit(Math.max(12, limit - 12))}
         disabled={limit <= 12}
       >
-        <span className="relative z-10 flex items-center gap-2">
-          <svg className="w-5 h-5 transform group-hover:-translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <span className="flex items-center gap-2">
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          Previous ({Math.max(12, limit - 12)})
+          Previous
         </span>
-        <div className="absolute inset-0 bg-gradient-to-r from-red-700 to-red-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </button>
-      
-      <div className='flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-purple-100 to-red-100 dark:from-purple-900/30 dark:to-red-900/30 rounded-lg shadow-md'>
-        <span className='font-bold text-lg bg-gradient-to-r from-purple-600 to-red-600 bg-clip-text text-transparent'>Showing:</span>
-        <span className='text-2xl font-bold text-red-600 dark:text-red-400 animate-pulse-slow'>{limit}</span>
-      </div>
-      
       <button 
-        className="group relative px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold rounded-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-red-500/50" 
+        className="inline-flex items-center gap-2 bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700" 
         onClick={() => setLimit(limit + 12)}
       >
-        <span className="relative z-10 flex items-center gap-2">
-          Next ({limit + 12})
-          <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <span className="flex items-center gap-2">
+          Next
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </span>
-        <div className="absolute inset-0 bg-gradient-to-r from-red-700 to-red-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </button>
     </div>
-      
-    </div>
-        </>
+    </main>
+    </>
   )
 }
 
