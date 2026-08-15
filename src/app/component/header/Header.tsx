@@ -54,13 +54,13 @@ const Header = () => {
   }
 
   return (
-    <div  className='sticky relative top-0 z-[999] header text-black shadow h-[10vh] flex items-center justify-evenly  font-bold'>
+    <div  className='sticky relative top-0 z-[999] header text-black shadow h-[10vh] flex items-center justify-around font-medium'>
       <div className='hidden md:flex'>
-        <span className='mr-4 cursor-p ointer hover:underline active:scale-95'><Link href="/">Home</Link></span>
-        <span className='mr-4 cursor-pointer hover:underline active:scale-95'><Link href='/Products'>Product</Link></span>
-        <span className='mr-4 cursor-pointer hover:underline active:scale-95'><Link href="/Photoshoot">Photoshoot</Link></span>
-        <span className='mr-4 cursor-pointer hover:underline active:scale-95'><Link href="/Blog">Blog</Link></span>
-        <span className='mr-4 cursor-pointer hover:underline active:scale-95'><Link href="/FAQ">FAQ</Link></span>
+        <span className='mr-10 cursor-p ointer hover:underline active:scale-95'><Link href="/">Home</Link></span>
+        <span className='mr-10 cursor-pointer hover:underline active:scale-95'><Link href='/Products'>Product</Link></span>
+        <span className='mr-10 cursor-pointer hover:underline active:scale-95'><Link href="/Photoshoot">Photoshoot</Link></span>
+        <span className='mr-10 cursor-pointer hover:underline active:scale-95'><Link href="/Blog">Blog</Link></span>
+        <span className='mr-10 cursor-pointer hover:underline active:scale-95'><Link href="/FAQ">FAQ</Link></span>
       </div> 
       <div className='flex md:hidden' onClick={burgerIcon}>
         <img className='w-6 h-6' src='/burger.png'/>
@@ -72,7 +72,7 @@ const Header = () => {
           <img src='/X.png' alt='Close' className='w-6 h-6'/>
         </button>
 
-        <span className='mb-4 text-lg font-semibold'>Menu</span>
+        <span className='mb-4 text-lg font-bold'>Menu</span>
         <span className='mb-2 cursor-pointer hover:underline active:scale-95'><Link href="/">Home</Link></span>
         <span className='mb-2 cursor-pointer hover:underline active:scale-95'><Link href='/Products'>Product</Link></span>
         <span className='mb-2 cursor-pointer hover:underline active:scale-95'><Link href="/Photoshoot">Photoshoot</Link></span>
@@ -134,7 +134,7 @@ const Header = () => {
 
         <div className='hidden md:flex md:items-center'>
 
-          <span className='mr-4 cursor-pointer hover:underline active:scale-95'><Link href='/Contact/'>Contact Us</Link></span> 
+          <span className='mr-10 cursor-pointer hover:underline active:scale-95'><Link href='/Contact/'>Contact Us</Link></span> 
             <Link href='/user'>
               {username ? (
                 <span className='hidden md:inline mr-2 hover:underline'>Hello, {username}</span>
@@ -152,7 +152,7 @@ const Header = () => {
             {!isAuthenticated ? 
               <div>
                 <span className='mr-4 cursor-pointer hover:underline active:scale-95'><Link href='/Signup'>Signup</Link></span>
-              <span className='mr-4 cursor-pointer hover:underline active:scale-95'><Link href='/Login'>Login</Link></span>
+                <span className='mr-4 cursor-pointer hover:underline active:scale-95'><Link href='/Login'>Login</Link></span>
               </div>        
               :
               <div>
@@ -160,7 +160,7 @@ const Header = () => {
               </div>
             }
             {userRole === 'ADMIN' && (
-              <span className='mr-4 cursor-pointer hover:underline active:scale-95'><Link href='/adminProduct'>Admin Dashboard</Link></span>
+              <span className='mr-10 cursor-pointer hover:underline active:scale-95'><Link href='/adminProduct'>Admin Dashboard</Link></span>
             )}
 
             <ThemeToggle></ThemeToggle>
