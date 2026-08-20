@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import CheckoutPhotoShoot from "@/app/component/checkoutPhotoShoot/page";  
 
 export default function CartPage() {
-  const { cart, removeFromCart, getTotal, clearCart, updateQuantity } = useCart();
+  const { cart, removeFromCart, clearCart, updateQuantity } = useCart();
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const router = useRouter();
   const [isPhotoShootAdded, setIsPhotoShootAdded] = useState(false);
@@ -27,6 +27,15 @@ export default function CartPage() {
   };
 
   const totalItems = cart.reduce((sum, item) => sum + (item.quantity ?? 1), 0);
+  const selectedCartItems = cart.filter((item) => selectedItems.includes(item.id));
+  const selectedTotal = selectedCartItems.reduce(
+    (sum, item) => sum + item.price * (item.quantity ?? 1),
+    0
+  );
+  const selectedItemCount = selectedCartItems.reduce(
+    (sum, item) => sum + (item.quantity ?? 1),
+    0
+  );
 
   return (
     <main className="min-h-screen bg-[var(--background)] px-5 py-10 text-[var(--foreground)] sm:px-8 lg:px-12">
@@ -78,9 +87,9 @@ export default function CartPage() {
             </section>
 
             <aside className="h-fit bg-black/[.04] p-6 dark:bg-white/[.07] lg:sticky lg:top-6">
-              <div className="flex items-center justify-between border-b border-black/10 pb-4 dark:border-white/15"><h2 className="font-bold">Order summary</h2><span className="text-sm opacity-60">{totalItems} item{totalItems === 1 ? "" : "s"}</span></div>
-              <dl className="space-y-4 border-b border-black/10 py-5 text-sm dark:border-white/15"><div className="flex justify-between"><dt className="opacity-60">Item&apos;s total</dt><dd>${getTotal().toFixed(2)}</dd></div><div className="flex justify-between"><dt className="opacity-60">Shipping</dt><dd>TBD</dd></div></dl>
-              <div className="flex justify-between py-5 font-bold"><span>Order total</span><span>${getTotal().toFixed(2)}</span></div>
+              <div className="flex items-center justify-between border-b border-black/10 pb-4 dark:border-white/15"><h2 className="font-bold">Order summary</h2><span className="text-sm opacity-60">{selectedItemCount} item{selectedItemCount === 1 ? "" : "s"}</span></div>
+              <dl className="space-y-4 border-b border-black/10 py-5 text-sm dark:border-white/15"><div className="flex justify-between"><dt className="opacity-60">Item&apos;s total</dt><dd>${selectedTotal.toFixed(2)}</dd></div><div className="flex justify-between"><dt className="opacity-60">Shipping</dt><dd>{selectedItemCount > 0 ? "TBD" : "-"}</dd></div></dl>
+              <div className="flex justify-between py-5 font-bold"><span>Order total</span><span>${selectedTotal.toFixed(2)}</span></div>
               <button onClick={handleProceedToCheckout} disabled={selectedItems.length === 0} className="w-full bg-black py-4 text-xs font-bold uppercase tracking-[0.16em] text-white transition hover:bg-black/80 disabled:cursor-not-allowed disabled:bg-black/25 dark:bg-white dark:text-black dark:hover:bg-white/80 dark:disabled:bg-white/25">Checkout</button>
               <p className="mt-4 text-center text-xs opacity-55">Select the items you want to check out.</p>
             </aside>
