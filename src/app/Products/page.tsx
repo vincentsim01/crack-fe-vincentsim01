@@ -83,12 +83,26 @@ const page = () => {
 
         <div className='grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 sm:gap-x-4 lg:grid-cols-4 lg:gap-x-5'>
 
+<a href="https://ibb.co/NdW2jtWP"><img src="https://i.ibb.co/67D0PrDx/Goku.png" alt="Goku" border="0"></a>
+
+
         {fetchedData.map((item:any)=>{
+          console.log(item)
           return (
             <article className='group min-w-0' key={item.id}>
               <Link href={`/Products/${item.id}`} className="block">
                 <div className='aspect-[4/5] overflow-hidden bg-zinc-100'>
-                  <img className='h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]' src={item.image} alt={item.title} width={400} height={500}/> 
+                  <img
+                    className='h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]'
+                    src={item.image || '/logo.png'}
+                    alt={item.title}
+                    width={400}
+                    height={500}
+                    onError={(event) => {
+                      event.currentTarget.onerror = null;
+                      event.currentTarget.src = '/logo.png';
+                    }}
+                  />
                 </div>
                 <div className='pt-3'>
                   <p className='text-[11px] text-black/55 dark:text-white/55'>Women, XS-XXL</p>
