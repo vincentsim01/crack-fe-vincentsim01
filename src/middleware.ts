@@ -30,12 +30,15 @@ export function middleware(request: NextRequest) {
   }
 
   // Define public routes that don't require authentication
-  const publicRoutes = ["/Login", "/", "/CSR", "/BusinessOpportunities", "/Privacy", "/Products", "/FAQ", "/Photoshoot", "/Blog", "/Contact", "/Signup"];
+  const publicRoutes = ["/Login", "/", "/CSR", "/BusinessOpportunities", "/Privacy", "/Products", "/FAQ", "/Photoshoot", "/Blog", "/Contact", "/Signup", "/AddToCart"];
 
   // Check if the route is public
-  if (publicRoutes.includes(pathname)) {
-    return NextResponse.next();
-  }
+if (
+  publicRoutes.includes(pathname) ||
+  pathname.startsWith("/Products/")
+) {
+  return NextResponse.next();
+}
 
   // Check for static files and Next.js internals
   if (
