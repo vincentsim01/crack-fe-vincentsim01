@@ -22,7 +22,7 @@ const Page = () => {
       ?.split('=')[1] || null;
   };
 
-
+  console.log('test')
 
 
     const initialValue = {
