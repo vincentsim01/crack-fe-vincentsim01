@@ -1,5 +1,6 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { useAuth } from "./authContext";
 
 type Product = {
   id: number;
@@ -24,43 +25,61 @@ type CartContextType = {
 export const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-  const [cart, setCart] = useState<Product[]>([]);
+  const { isAuthenticated, isLoading, user } = useAuth();
+  const storageKey = isAuthenticated && user ? `cart:user:${user.id}` : "cart:guest";
+  const [cartState, setCartState] = useState<{ storageKey: string | null; items: Product[] }>({
+    storageKey: null,
+    items: [],
+  });
+  const cart = cartState.items;
 
-  // Load cart from localStorage on first render
   useEffect(() => {
-    const storedCart = localStorage.getItem("cart");
-    if (storedCart) {
-      setCart(JSON.parse(storedCart));
+    if (isLoading) {
+      return;
     }
-  }, []);
 
-  // Save cart to localStorage whenever it changes
+    const storedCart = localStorage.getItem(storageKey);
+    const legacyGuestCart = storageKey === "cart:guest" ? localStorage.getItem("cart") : null;
+    try {
+      setCartState({ storageKey, items: JSON.parse(storedCart || legacyGuestCart || "[]") });
+      if (!storedCart && legacyGuestCart) {
+        localStorage.setItem(storageKey, legacyGuestCart);
+      }
+    } catch {
+      setCartState({ storageKey, items: [] });
+    }
+  }, [isLoading, storageKey]);
+
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
+    if (cartState.storageKey === storageKey) {
+      localStorage.setItem(storageKey, JSON.stringify(cart));
+    }
+  }, [cart, cartState.storageKey, storageKey]);
 
   const addToCart = (product: Product) => {
-    setCart((prev) => {
-      const existing = prev.find((item) => item.id === product.id);
+    setCartState((current) => {
+      const previousItems = current.storageKey === storageKey ? current.items : [];
+      const existing = previousItems.find((item) => item.id === product.id);
       if (existing) {
-        // If product already exists, increase quantity
-        return prev.map((item) =>
+        return {
+          storageKey,
+          items: previousItems.map((item) =>
           item.id === product.id
             ? { ...item, quantity: (item.quantity || 1) + 1 }
             : item
-        );
-      } else {
-        return [...prev, { ...product, quantity: 1 }];
+          ),
+        };
       }
+      return { storageKey, items: [...previousItems, { ...product, quantity: 1 }] };
     });
   };
 
   const removeFromCart = (id: number) => {
-    setCart((prev) => prev.filter((item) => item.id !== id));
+    setCartState((current) => ({ ...current, items: current.items.filter((item) => item.id !== id) }));
   };
 
   const clearCart = () => {
-    setCart([]);
+    setCartState((current) => ({ ...current, items: [] }));
   };
 
   const getTotal = () => {
@@ -76,11 +95,12 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       return;
     }
 
-    setCart((currentItems) =>
-      currentItems.map((item) =>
+    setCartState((current) => ({
+      ...current,
+      items: current.items.map((item) =>
         item.id === id ? { ...item, quantity } : item
-      )
-    );
+      ),
+    }));
   };
 
   const getTotalItems = () => {

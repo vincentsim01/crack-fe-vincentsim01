@@ -17,27 +17,8 @@ interface Props {
 
 export default function AddToCartButton({ product }: Props) {
   const { addToCart } = useCart();
-  // console.log(product + "from props")
   const handleAddToCart = () => {
-    // Get existing cart items or create empty array
-    const existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
-
-    // Check if item already exists
-    const isExisting = existingCart.some((item: Product) => item.id === product.id);
-
-    if (isExisting) {
-      alert("Item is already in your cart!");
-      return;
-    }
-
     addToCart(product);
-
-    // Add new item
-    const updatedCart = [...existingCart, product];
-
-    // Save back to localStorage
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-
     alert(`${product.title} added to cart!`);
   };
 

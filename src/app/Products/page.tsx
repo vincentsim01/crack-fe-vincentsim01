@@ -83,7 +83,7 @@ const page = () => {
 
         <div className='grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 sm:gap-x-4 lg:grid-cols-4 lg:gap-x-5'>
 
-<a href="https://ibb.co/NdW2jtWP"><img src="https://i.ibb.co/67D0PrDx/Goku.png" alt="Goku" border="0" /></a>
+{/* <a href="https://ibb.co/NdW2jtWP"><img src="https://i.ibb.co/67D0PrDx/Goku.png" alt="Goku" border="0" /></a> */}
 
 
         {fetchedData.map((item:any)=>{
