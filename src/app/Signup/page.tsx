@@ -84,36 +84,34 @@ const Page = () => {
         router.push('/Login');
     }
   return (
-    <div style={{ padding: "20px", textAlign: "center" }}>
-       <h1>Sign Up</h1>
+    <main className="min-h-screen px-4 py-12 sm:px-6">
+      <section className="mx-auto w-full max-w-md border border-current/20 bg-[var(--background)] p-6 shadow-lg sm:p-8">
+        <header className="mb-8 text-center">
+          <h1 className="text-3xl font-bold">Create an account</h1>
+          <p className="mt-2 text-sm opacity-70">Sign up to get started.</p>
+        </header>
 
- 
-      <form onSubmit={handleSubmit} 
-      style={{ maxWidth: "300px", margin: "0 auto" }}
-      >
-      <div  style={{ marginBottom: "10px" }}>
-        <label htmlFor='name'>Username</label>
-        <input type='text' id='name' name='name' value={formData.name} onChange={handleChange} placeholder='name' required className='border border-black rounded-md text-center' style={{ width: "100%", padding: "5px", background: "var(--foreground)",color: "var(--background)", }}/>
-      </div>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label htmlFor="name" className="mb-2 block text-sm font-semibold">Username</label>
+            <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} placeholder="Enter your username" required className="w-full border border-current/30 bg-transparent px-3 py-2.5 outline-none transition-colors placeholder:opacity-50 focus:border-current" />
+          </div>
 
+          <div>
+            <label htmlFor="email" className="mb-2 block text-sm font-semibold">Email</label>
+            <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} placeholder="you@example.com" required className="w-full border border-current/30 bg-transparent px-3 py-2.5 outline-none transition-colors placeholder:opacity-50 focus:border-current" />
+          </div>
 
-      <div  style={{ marginBottom: "10px" }}>
-        <br></br>
-        <label htmlFor='email'>Email</label>
-        <input type='email' id='email' name='email' value={formData.email} onChange={handleChange} placeholder='email' required className='border border-black rounded-md text-center' style={{ width: "100%", padding: "5px", background: "var(--foreground)",color: "var(--background)", }}/>
-      </div>
+          <div>
+            <label htmlFor="password" className="mb-2 block text-sm font-semibold">Password</label>
+            <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} placeholder="Create a password" required className="w-full border border-current/30 bg-transparent px-3 py-2.5 outline-none transition-colors placeholder:opacity-50 focus:border-current" />
+          </div>
 
-        <br></br>
-        <div  style={{ marginBottom: "10px" }}>
-        <label htmlFor='password'>Password</label>
-        <input type='password' id='password' name='password' value={formData.password} onChange={handleChange} placeholder='password' required className='border border-black rounded-md text-center' style={{ width: "100%", padding: "5px", background: "var(--foreground)",color: "var(--background)", }}/>
-        </div>
-        <br></br>
-        <div  style={{ marginBottom: "10px" }}>
-        <label htmlFor='role'>Role</label>
-        <input type='text' id='role' name='role' value={formData.role} onChange={handleChange} placeholder='role' required className='border border-black rounded-md text-center' style={{ width: "100%", padding: "5px", background: "var(--foreground)",color: "var(--background)", }}/>
-        </div>      
-        <br></br>
+          <div>
+            <label htmlFor="role" className="mb-2 block text-sm font-semibold">Role</label>
+            <input type="text" id="role" name="role" value={formData.role} onChange={handleChange} placeholder="USER" required className="w-full border border-current/30 bg-transparent px-3 py-2.5 outline-none transition-colors placeholder:opacity-50 focus:border-current" />
+          </div>
+          {error && <p role="alert" className="border border-red-600 px-3 py-2 text-sm text-red-600">{error}</p>}
         {/* <div  style={{ marginBottom: "10px" }}>
         <label htmlFor='gender'>Gender</label>
         <input type='text' id='gender' name='gender' value={formData.gender} onChange={handleChange} placeholder='gender' required className='border border-black rounded-md text-center' style={{ width: "100%", padding: "5px", background: "var(--foreground)",color: "var(--background)", }}/>
@@ -125,18 +123,15 @@ const Page = () => {
         </div>
         <br></br> */}
         <button
-         style={{
-            padding: "10px 20px",
-            backgroundColor: isLoading ? "var(--background)" : "var(--foreground)",
-            color: isLoading ? "var(--foreground)" : "var(--background)",
-            border: "none",
-            borderRadius: "4px",
-            cursor: isLoading ? "not-allowed" : "pointer"
-          }}
-        
-        >Submit</button>
+          type="submit"
+          disabled={isLoading}
+          className="w-full bg-[var(--foreground)] px-4 py-3 font-semibold text-[var(--background)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-none"
+        >
+          {isLoading ? "Creating account..." : "Create account"}
+        </button>
       </form>
-    </div>
+      </section>
+    </main>
   
     )
 }

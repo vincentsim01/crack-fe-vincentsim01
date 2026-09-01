@@ -121,72 +121,58 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{ padding: "20px", textAlign: "center" }}>
-      <h1>Login</h1>
+    <main className="min-h-screen px-4 py-12 sm:px-6">
+      <section className="mx-auto w-full max-w-md border border-current/20 bg-[var(--background)] p-6 shadow-lg sm:p-8">
+        <header className="mb-8 text-center">
+          <h1 className="text-3xl font-bold">Welcome back</h1>
+          <p className="mt-2 text-sm opacity-70">Log in to continue.</p>
+        </header>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      <form
-        onSubmit={handleLogin}
-        style={{ maxWidth: "300px", margin: "0 auto" }}
-      >
-        <div style={{ marginBottom: "10px" }}>
-          <label>Email:</label>
-          <br />
+        <form onSubmit={handleLogin} className="space-y-5">
+          <div>
+            <label htmlFor="email" className="mb-2 block text-sm font-semibold">Email</label>
           <input
-            type="text"
+            id="email"
+            type="email"
             value={email}
-            className='rounded-md'
             onChange={(e) => setEmail(e.target.value)}
-            style={{ width: "100%", padding: "5px", background: "var(--foreground)",color: "var(--background)", }}
+            placeholder="you@example.com"
+            className="w-full border border-current/30 bg-transparent px-3 py-2.5 outline-none transition-colors placeholder:opacity-50 focus:border-current"
             required
           />
-        </div>
+          </div>
 
-        <div style={{ marginBottom: "10px" }}>
-          <label>Password:</label>
-          <br />
+          <div>
+            <label htmlFor="password" className="mb-2 block text-sm font-semibold">Password</label>
           <input
+            id="password"
             type="password"
             value={password}
-            className='rounded-md'
             onChange={(e) => setPassword(e.target.value)}
-            style={{ width: "100%", padding: "5px", background: "var(--foreground)",color: "var(--background)", }}
-            
+            placeholder="Enter your password"
+            className="w-full border border-current/30 bg-transparent px-3 py-2.5 outline-none transition-colors placeholder:opacity-50 focus:border-current"
             required
           />
-        </div>
+          </div>
 
-                      {/* style={{
-                background: "var(--foreground)",
-                color: "var(--background)",
-                borderColor: "var(--foreground)",
-              }} */}
+          {error && <p role="alert" className="border border-red-600 px-3 py-2 text-sm text-red-600">{error}</p>}
 
-        <button
-          type="submit"
-          disabled={isLoading}
-          style={{
-            padding: "10px 20px",
-            backgroundColor: isLoading ? "var(--background)" : "var(--foreground)",
-            color: isLoading ? "var(--foreground)" : "var(--background)",
-            border: "none",
-            borderRadius: "4px",
-            cursor: isLoading ? "not-allowed" : "pointer"
-          }}
-        >
-          {isLoading ? "Logging in..." : "Login"}
-        </button>
-      </form>
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full bg-[var(--foreground)] px-4 py-3 font-semibold text-[var(--background)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-none"
+          >
+            {isLoading ? "Logging in..." : "Log in"}
+          </button>
+        </form>
 
-      <div style={{ marginTop: "20px", fontSize: "12px" }}>
-        <p><strong>Platzi Test Credentials:</strong></p>
-        <p>Email: <code>john@gmail.com</code></p>
-        <p>Password: <code>john</code></p>
-        <p style={{ marginTop: "10px", fontSize: "11px", color: "#666" }}>
-          Note: This will login as 'John' with admin privileges
-        </p>
-      </div>
-    </div>
+        <aside className="mt-8 border-t border-current/20 pt-5 text-center text-xs opacity-70">
+          <p className="font-semibold">Test credentials</p>
+          <p className="mt-2">Email: <code>john@gmail.com</code></p>
+          <p>Password: <code>john</code></p>
+          <p className="mt-3">This account has administrator access.</p>
+        </aside>
+      </section>
+    </main>
   );
 }
