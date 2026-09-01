@@ -20,7 +20,10 @@ const Page = () => {
 
       <div className="space-y-6">
         {faqs.map((item, index) => (
-          <div key={index}>
+          <div
+            key={index}
+            className="border border-current/20 p-5 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg"
+          >
             <h2 className="text-xl font-semibold"     style={{
       background: "var(--background)",
       color: "var(--foreground)",
