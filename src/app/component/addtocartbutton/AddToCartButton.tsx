@@ -8,6 +8,8 @@ interface Product {
   title: string;
   price: number;
   images?: string;
+  image?: string;
+  description?: string;
   // totalItems: number;
 }
 
