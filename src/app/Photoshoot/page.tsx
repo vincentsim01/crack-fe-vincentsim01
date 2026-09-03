@@ -177,7 +177,7 @@ const page = () => {
           </div>
         </div>
         <h2 className="text-2xl font-semibold mb-3 relative z-10">We Follow What You Want</h2>
-        <p className="opacity-80 relative z-10">
+        <p className="opacity-80 relative z-10 ">
           We listen closely to your requests to give you the perfect shoot.
         </p>
       </div>

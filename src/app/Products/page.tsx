@@ -54,7 +54,7 @@ const page = () => {
 
     <div className='mb-8 flex items-center justify-center gap-3'>
       <button 
-        className="inline-flex items-center gap-2 border border-black/20 px-4 py-2 text-sm font-medium transition-colors hover:bg-black hover:text-white disabled:cursor-not-allowed disabled:opacity-40" 
+        className="inline-flex items-center gap-2 bg-black px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-40" 
         onClick={() => setLimit(Math.max(12, limit - 12))}
         disabled={limit <= 12}
       >
@@ -66,7 +66,7 @@ const page = () => {
         </span>
       </button>
       <button 
-        className="inline-flex items-center gap-2 bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700" 
+        className="inline-flex items-center gap-2 bg-black px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200" 
         onClick={() => setLimit(limit + 12)}
       >
         <span className="flex items-center gap-2">
@@ -123,7 +123,7 @@ const page = () => {
 
             <div className='mt-10 flex items-center justify-center gap-3'>
       <button 
-        className="inline-flex items-center gap-2 border border-black/20 px-4 py-2 text-sm font-medium transition-colors hover:bg-black hover:text-white disabled:cursor-not-allowed disabled:opacity-40" 
+        className="inline-flex items-center gap-2 bg-black px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-40" 
         onClick={() => setLimit(Math.max(12, limit - 12))}
         disabled={limit <= 12}
       >
@@ -135,7 +135,7 @@ const page = () => {
         </span>
       </button>
       <button 
-        className="inline-flex items-center gap-2 bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700" 
+        className="inline-flex items-center gap-2 bg-black px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200" 
         onClick={() => setLimit(limit + 12)}
       >
         <span className="flex items-center gap-2">
