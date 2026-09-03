@@ -6,6 +6,7 @@ import { useLoading } from '../context/loadingContext';
 import PhotoshootBanner from '../component/photoshootBanner/PhotoshootBanner';
 import CheckoutPhotoShoot from "@/app/component/checkoutPhotoShoot/page";  
 import { useCart } from '@/app/context/cartContext';
+import { useTheme } from '../context/themeContext';
 import Studio from '../component/Studio/Studio';
 
 interface Product {
@@ -23,6 +24,7 @@ const page = () => {
 
   const { isLoading, setIsLoading } = useLoading();
   const { addToCart } = useCart();
+  const { theme } = useTheme();
   const [thedate, setthedate] = useState('')
 
   const initialValue = {
@@ -304,7 +306,15 @@ onChange={(e) => {
             </div>
             
             {/* Package name with gradient */}
-            <h3 className="text-2xl font-semibold mb-1 bg-gradient-to-r from-purple-600 to-red-600 bg-clip-text text-transparent">{name}</h3>
+            <h3
+              className={`text-2xl font-semibold mb-1 bg-clip-text text-transparent ${
+                theme === 'light'
+                  ? 'bg-gradient-to-r from-white via-gray-100 to-white'
+                  : 'bg-gradient-to-r from-purple-600 to-red-600'
+              }`}
+            >
+              {name}
+            </h3>
             
             {/* Price with animation */}
             <div className="text-red-600 dark:text-red-400 font-bold text-2xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
@@ -328,7 +338,11 @@ onChange={(e) => {
 
             <button
               onClick={handlePackageButtonClick}
-              className="mt-auto group/btn relative px-6 py-3 rounded-lg bg-gradient-to-r from-red-600 to-red-700 text-white font-bold overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-red-500/50 w-full"
+              className={`mt-auto group/btn relative px-6 py-3 rounded-lg font-bold overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl w-full ${
+                theme === 'light'
+                  ? 'bg-black text-white hover:bg-gray-800 hover:shadow-black/50'
+                  : 'bg-white text-black hover:bg-gray-200 hover:shadow-white/50'
+              }`}
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
                 <svg className="w-5 h-5 transform group-hover/btn:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -336,7 +350,6 @@ onChange={(e) => {
                 </svg>
                 Add to cart
               </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-red-700 to-red-800 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
             </button>
           </div>
         );

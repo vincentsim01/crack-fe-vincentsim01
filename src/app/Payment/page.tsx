@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useCart } from "@/app/context/cartContext";
 
 type Product = {
   id: number;
@@ -22,6 +23,7 @@ const getPrice = (price: unknown) => Number(price) || 0;
 const formatPrice = (price: unknown) => getPrice(price).toFixed(2);
 
 export default function PaymentPage() {
+  const { removeFromCart } = useCart();
   const [checkoutItems, setCheckoutItems] = useState<Product[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [paymentMethod, setPaymentMethod] = useState<string>("credit_card");
@@ -60,7 +62,6 @@ export default function PaymentPage() {
 
 
   const handlePayment = async () => {
-    alert(`Payment successful using ${paymentMethod}! Total: $${total}`);
     console.log("All cookies:", document.cookie);
     console.log("User ID:", userId);
     console.log("Type of User ID:", typeof userId);
@@ -194,7 +195,7 @@ export default function PaymentPage() {
     })
     );
 
-    await fetch("https://revoubackend6-production.up.railway.app/payments", {
+    const paymentResponse = await fetch("https://revoubackend6-production.up.railway.app/payments", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -206,9 +207,17 @@ export default function PaymentPage() {
         status: "SUCCESS",
         transactionId: Number(transId),
       }),
-    }).then((response) => response.json());
+    });
+
+    if (!paymentResponse.ok) {
+      throw new Error("Payment could not be completed.");
+    }
+
+    await paymentResponse.json();
+    checkoutItems.forEach((item) => removeFromCart(item.id));
 
     localStorage.removeItem("checkoutItems");
+    alert(`Payment successful using ${paymentMethod}! Total: $${total.toFixed(2)}`);
     router.push("/ThankYou");
   };
 
