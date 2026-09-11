@@ -5,6 +5,7 @@ import Link from "next/link";
 import {Product, ProductFormData, updateProduct} from '@/types/product';
 import { api } from '@/lib/api/api';
 import { API_BASE_URL } from '@/lib/config';
+import { ChevronLeft, ChevronRight, PackagePlus, Pencil, Plus, Trash2, X } from 'lucide-react';
 
 
 const AdminProduct = () => {
@@ -38,11 +39,6 @@ const fetchProducts = async (fetchLimit?: number) => {
   useEffect(() => {
     // call the shared fetch function which toggles loading
     fetchProducts(limit);
-    // fetch(`https://revoubackend6-production.up.railway.app/products`, {
-    //   method: "GET",
-    //   headers: {}})
-    //   .then(response => response.json())
-    //   .then(data => setProducts(data));
     }, [offset, limit]);
     const [updateProducts, setUpdateProducts] = useState<updateProduct | null>(updateInitialProduct);
     let initialAddProduct: ProductFormData = {
@@ -120,6 +116,10 @@ function openAddProductModal() {
   
 }
 
+function closeAddProductModal() {
+  document.getElementById('addProductModal')?.classList.add('hidden');
+}
+
 function openUpdateProductModal() {
   const modal = document.getElementById('updateProductModal');
   modal?.classList.toggle('hidden');
@@ -165,122 +165,159 @@ function handleEditProduct(productId: number) {
 }
 
   return (
-    <div className='mt-5'>
-      <h1 className='text-4xl text-center font-bold'>PRODUCT ADMIN</h1>
-      <br></br>
-      <div className='flex justify-center items-center'>
-        <button className='border p-2 rounded bg-blue-500 text-white z-50' onClick={openAddProductModal} style={{background:"var(--foreground)", color:"var(--background)"}}>Add New Product</button>
-      </div>
-      <br></br><br></br>
-      <div className='flex justify-center items-center'>
-        <button className='border p-2 rounded bg-green-500 text-white m-2' onClick={previousPagination} style={{background:"var(--foreground)", color:"var(--background)"}}>Previous Page</button>
-        <button className='border p-2 rounded bg-green-500 text-white' onClick={nextPagination} style={{background:"var(--foreground)", color:"var(--background)"}}>Next Page</button>
-      </div>
+    <main className='min-h-screen px-5 py-10 sm:px-8 lg:px-12' style={{ background: 'var(--background)' }}>
+      <div className='mx-auto max-w-7xl'>
+        <header className='mb-8 flex flex-wrap items-end justify-between gap-5'>
+          <div>
+            <p className='mb-2 text-xs font-bold uppercase tracking-[0.16em] text-amber-700'>Unikloh / Inventory</p>
+            <h1 className='text-4xl font-bold tracking-tight sm:text-5xl'>Product catalogue</h1>
+            <p className='mt-3 max-w-xl text-sm opacity-70'>Manage your store collection, pricing, and stock from one place.</p>
+          </div>
+          <button className='flex items-center gap-2 rounded-full px-5 py-3 text-sm font-bold shadow-sm transition hover:-translate-y-0.5 hover:shadow-md' onClick={openAddProductModal} style={{ background: 'var(--foreground)', color: 'var(--background)' }}>
+            <Plus size={17} /> Add product
+          </button>
+        </header>
+
+        <div className='mb-7 flex flex-wrap items-center justify-between gap-4 border-y border-current/15 py-4'>
+          <div className='flex items-center gap-3 text-sm opacity-70'><PackagePlus size={18} /><span>{loading ? 'Refreshing catalogue...' : `${products.length} products displayed`}</span></div>
+          <div className='flex items-center gap-2'>
+            <button aria-label='Previous products' className='rounded-full border border-current/20 p-2 transition hover:bg-(--foreground) hover:text-(--background) disabled:cursor-not-allowed disabled:opacity-30' onClick={previousPagination} disabled={offset === 0}><ChevronLeft size={18} /></button>
+            <span className='min-w-24 text-center text-xs font-bold uppercase tracking-wider opacity-60'>Page {Math.floor(offset / 10) + 1}</span>
+            <button aria-label='Next products' className='rounded-full border border-current/20 p-2 transition hover:bg-(--foreground) hover:text-(--background)' onClick={nextPagination}><ChevronRight size={18} /></button>
+          </div>
+        </div>
 
 
-          {loading && <div className='text-center py-8 text-lg'>Loading products...</div>}
+          {loading && <div className='border border-current/10 py-16 text-center text-sm opacity-70'>Loading products...</div>}
 
 
 
 
 <div
   id="addProductModal"
-  className="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center transition-all duration-300"
-  style={{background:"var(--foreground)", color:"var(--background)"}}
+  className="fixed inset-0 z-50 hidden overflow-y-auto bg-black/60 backdrop-blur-sm transition-all duration-300"
+  onClick={closeAddProductModal}
 >
-  <div className="bg-white w-[400px] rounded-xl p-6 shadow-xl relative animate-fadeIn">
-
-    {/* Title */}
-    <h2 className="text-xl font-semibold mb-4">Add New Product</h2>
-
-    {/* Close Button */}
+  <div className="min-h-full w-full bg-(--background) px-5 py-8 text-(--foreground) shadow-2xl sm:px-8 sm:py-12 lg:px-12">
+    <div className="mx-auto max-w-4xl">
+    <div className="mb-8 flex items-start justify-between gap-4 border-b border-current/10 pb-6">
+      <div>
+        <p className="mb-2 text-xs font-bold uppercase tracking-[0.16em] text-amber-700">Inventory / New item</p>
+        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Add new product</h2>
+        <p className="mt-2 max-w-xl text-sm opacity-65">Add the details customers will see in your catalogue.</p>
+      </div>
     <button
       onClick={() => openAddProductModal()}
-      className="absolute top-3 right-3 text-red-500 font-bold text-lg hover:text-red-700 transition"
+      type="button"
+      aria-label="Close add product form"
+      className="rounded-full border border-current/15 p-2 opacity-60 transition hover:bg-(--foreground) hover:text-(--background) hover:opacity-100"
     >
-      ✕
+      <X size={18} />
     </button>
+    </div>
 
-    {/* FORM */}
-    <form onSubmit={handleAddProduct} className="flex flex-col gap-3">
+    <form onSubmit={handleAddProduct} id='addNewProductForm' className="mx-auto max-w-3xl space-y-6" onClick={(event) => event.stopPropagation()}>
 
       <div>
-        <label className="text-sm font-medium">Title:</label>
+        <label htmlFor="product-title" className="mb-2 block text-sm font-semibold">Product name</label>
         <input
-          className="border rounded p-2 w-full"
+          id="product-title"
+          className="w-full rounded-lg border border-current/20 bg-transparent px-3 py-2.5 outline-none transition focus:border-current"
           type="text"
+          placeholder="e.g. Moonlit warrior jacket"
           value={formData.title}
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+          required
         />
       </div>
 
       <div>
-        <label className="text-sm font-medium">Price:</label>
+        <label htmlFor="product-price" className="mb-2 block text-sm font-semibold">Price</label>
         <input
-          className="border rounded p-2 w-full"
+          id="product-price"
+          className="w-full rounded-lg border border-current/20 bg-transparent px-3 py-2.5 outline-none transition focus:border-current"
           type="number"
+          min="0"
+          step="0.01"
+          placeholder="0.00"
           value={formData.price}
           onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) })}
+          required
         />
       </div>
 
       <div>
-        <label className="text-sm font-medium">Description:</label>
+        <label htmlFor="product-description" className="mb-2 block text-sm font-semibold">Description</label>
         <textarea
-          className="border rounded p-2 w-full"
+          id="product-description"
+          className="min-h-28 w-full resize-y rounded-lg border border-current/20 bg-transparent px-3 py-2.5 outline-none transition focus:border-current"
           rows={3}
+          placeholder="Describe the product, materials, or fit."
           value={formData.description}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+          required
         ></textarea>
       </div>
 
       <div>
-        <label className="text-sm font-medium">Image:</label>
+        <label htmlFor="product-image" className="mb-2 block text-sm font-semibold">Image URL</label>
         <input
-          className="border rounded p-2 w-full"
+          id="product-image"
+          className="w-full rounded-lg border border-current/20 bg-transparent px-3 py-2.5 outline-none transition focus:border-current"
           type="text"
+          placeholder="https://example.com/product-image.jpg"
           value={formData.image}
           onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+          required
         />
       </div>
 
       <div>
-        <label className="text-sm font-medium">Stock:</label>
+        <label htmlFor="product-stock" className="mb-2 block text-sm font-semibold">Stock quantity</label>
         <input
-          className="border rounded p-2 w-full"
-          type="text"
-          value={formData.image}
+          id="product-stock"
+          className="w-full rounded-lg border border-current/20 bg-transparent px-3 py-2.5 outline-none transition focus:border-current"
+          type="number"
+          min="0"
+          placeholder="0"
+          value={formData.stock}
           onChange={(e) => setFormData({ ...formData, stock: Number(e.target.value) })}
+          required
         />
       </div>
 
-      <button
-        type="submit"
-        className="mt-2 bg-green-600 text-white py-2 rounded hover:bg-green-700 transition"
-      >
-        Submit
-      </button>
+      <div className="flex flex-col-reverse gap-3 border-t border-current/10 pt-5 sm:flex-row sm:justify-end">
+        <button type="button" onClick={() => openAddProductModal()} className="rounded-lg border border-current/20 px-4 py-2.5 text-sm font-semibold transition hover:bg-current/5">Cancel</button>
+        <button type="submit" className="rounded-lg bg-(--foreground) px-5 py-2.5 text-sm font-bold text-(--background) transition hover:-translate-y-0.5 hover:shadow-md">Create product</button>
+      </div>
 
     </form>
+    </div>
   </div>
 </div>
 
 
 
 
+        <section className='grid gap-5 sm:grid-cols-2 xl:grid-cols-3'>
         {products.map(product => (
-          <div key={product.id} className='border rounded-lg p-5 m-4 shadow-sm hover:shadow-md transition-shadow' style={{background:"var(--background)", color:"var(--foreground)"}}>
-            <h2 className="text-xl font-semibold mb-2">{product.title}</h2>
-            <img className='w-20 h-20 object-cover rounded mb-3' src={product.image} alt={product.title} />
-            <p>{product.description}</p>
-            <p>Price: ${product.price}</p>
-            <br></br>
-            <button className='border p-2 rounded' style={{background:"var(--foreground)", color:"var(--background)"}} onClick={() => openUpdateProductModal()}>Edit</button>
-            <button className='border p-2 rounded' style={{background:"var(--foreground)", color:"var(--background)"}} onClick={() => handleDeleteProduct(product.id)}>Delete</button>
+          <article key={product.id} className='group overflow-hidden rounded-2xl border border-current/15 bg-(--background) shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg'>
+            <div className='relative aspect-4/3 overflow-hidden bg-current/5'>
+              <img className='h-full w-full object-cover transition duration-500 group-hover:scale-105' src={product.image} alt={product.title} />
+              <span className='absolute right-3 top-3 rounded-full bg-(--foreground) px-3 py-1 text-xs font-bold text-(--background)'>${product.price}</span>
+            </div>
+            <div className='p-5'>
+              <div className='mb-3 flex items-start justify-between gap-3'><h2 className="text-xl font-semibold leading-tight">{product.title}</h2><span className='shrink-0 text-xs opacity-50'>#{product.id}</span></div>
+              <p className='mb-5 line-clamp-2 min-h-10 text-sm opacity-65'>{product.description}</p>
+              <div className='flex gap-2 border-t border-current/10 pt-4'>
+                <button aria-label={`Edit ${product.title}`} className='flex flex-1 items-center justify-center gap-2 rounded-lg border border-current/20 px-3 py-2 text-sm font-semibold transition hover:bg-(--foreground) hover:text-(--background)' onClick={() => openUpdateProductModal()}><Pencil size={15} /> Edit</button>
+                <button aria-label={`Delete ${product.title}`} className='flex items-center justify-center rounded-lg border border-red-200 px-3 py-2 text-red-700 transition hover:bg-red-700 hover:text-white' onClick={() => handleDeleteProduct(product.id)}><Trash2 size={15} /></button>
+              </div>
+            </div>
           
           <div
               id="updateProductModal"
-              className="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+              className="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm"
               style={{background:"var(--foreground)", color:"var(--background)"}}
             >
               <div className="bg-white w-[400px] rounded-xl shadow-xl p-6 relative animate-scaleIn">
@@ -373,15 +410,19 @@ function handleEditProduct(productId: number) {
               </div>
             </div>
           
-          </div>
+          </article>
         ))}
+        </section>
 
-      
-      <div className='flex justify-center items-center'>
-        <button className='border p-2 rounded bg-green-500 text-white m-2' onClick={previousPagination} style={{background:"var(--foreground)", color:"var(--background)"}}>Previous Page</button>
-        <button className='border p-2 rounded bg-green-500 text-white' onClick={nextPagination} style={{background:"var(--foreground)", color:"var(--background)"}}>Next Page</button>
+      <div className='mt-8 flex justify-center'>
+        <div className='flex items-center gap-2 rounded-full border border-current/15 px-3 py-2'>
+          <button aria-label='Previous products' className='p-1 opacity-70 transition hover:opacity-100 disabled:opacity-30' onClick={previousPagination} disabled={offset === 0}><ChevronLeft size={18} /></button>
+          <span className='px-3 text-xs font-bold uppercase tracking-wider opacity-60'>Page {Math.floor(offset / 10) + 1}</span>
+          <button aria-label='Next products' className='p-1 opacity-70 transition hover:opacity-100' onClick={nextPagination}><ChevronRight size={18} /></button>
+        </div>
       </div>
-    </div>
+      </div>
+    </main>
   )
 }
 
