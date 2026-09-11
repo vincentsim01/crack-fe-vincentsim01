@@ -2,6 +2,7 @@
 import React from 'react'
 import BannerContact from '../component/banner/bannerContact'
 import { useTheme } from '../context/themeContext'
+import { API_BASE_URL } from '@/lib/config'
 
 const Contact = () => {
   const { theme } = useTheme();
@@ -13,7 +14,7 @@ const Contact = () => {
     const payload = Object.fromEntries(formData.entries());
 
     try {
-      const res = await fetch('https://revoubackend6-production.up.railway.app/contact', {
+      const res = await fetch(`${API_BASE_URL}/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

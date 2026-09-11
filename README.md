@@ -2,6 +2,24 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 Railway (Backend): https://revoubackend6-production.up.railway.app/
 
+## Backend URL
+
+The frontend reads the backend origin from `NEXT_PUBLIC_API_URL`.
+
+For local development, create `.env.local` with:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3001
+```
+
+For production, set it to:
+
+```env
+NEXT_PUBLIC_API_URL=https://revoubackend6-production.up.railway.app
+```
+
+Without an override, development defaults to localhost and production defaults to Railway.
+
 
 Netlify (Frontend): https://uniklohfe.netlify.app/
 

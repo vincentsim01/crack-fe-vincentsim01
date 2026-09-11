@@ -23,6 +23,7 @@ interface AuthContextType {
   userRole: 'ADMIN' | 'USER'| null;
   logout: () => void;
   refreshUser: () => void;
+  updateAvatar: (avatar: string) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -164,6 +165,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
+  const updateAvatar = (avatar: string): void => {
+    if (!user) return;
+
+    const updatedUser = { ...user, avatar };
+    const expires = new Date();
+    expires.setTime(expires.getTime() + (30 * 60 * 1000));
+    document.cookie = `user-data=${JSON.stringify(updatedUser)}; path=/; expires=${expires.toUTCString()}`;
+    setUser(updatedUser);
+  };
+
   const value: AuthContextType = {
     user,
     isLoading,
@@ -171,6 +182,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     userRole,
     logout,
     refreshUser,
+    updateAvatar,
   };
 
   return (

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from "next/link";
 import {Product, ProductFormData, updateProduct} from '@/types/product';
 import { api } from '@/lib/api/api';
+import { API_BASE_URL } from '@/lib/config';
 
 
 const AdminProduct = () => {
@@ -81,7 +82,7 @@ const fetchProducts = async (fetchLimit?: number) => {
 function handleAddProduct(e: any) {
   e.preventDefault();
 
-  fetch("https://revoubackend6-production.up.railway.app/products", {
+  fetch(`${API_BASE_URL}/products`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -125,7 +126,7 @@ function openUpdateProductModal() {
 }
 
 function handleDeleteProduct(productId: number) {
-  fetch(`https://revoubackend6-production.up.railway.app/products/${productId}`, {
+  fetch(`${API_BASE_URL}/products/${productId}`, {
     method: "DELETE",
   })
     .then((res) => {
@@ -144,7 +145,7 @@ function handleEditProduct(productId: number) {
   // Logic to edit a product
 
   // console.log(updateProducts)
-  fetch(`https://revoubackend6-production.up.railway.app/products/${productId}`, {
+  fetch(`${API_BASE_URL}/products/${productId}`, {
     method: "PUT",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify(

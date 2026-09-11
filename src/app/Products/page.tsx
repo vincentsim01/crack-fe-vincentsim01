@@ -5,9 +5,10 @@ import { useState, useEffect } from 'react';
 import Link from "next/link";
 import FormDeleteProduct from '@/app/component/formDeleteProduct/page';
 import BannerCosplayNight from '../component/banner/BannerCosplayNight';
+import { API_BASE_URL } from '@/lib/config';
 
 export async function deleteProductAction(id: number) {
-  await fetch(`https://revoubackend6-production.up.railway.app/products/${id}`, {
+  await fetch(`${API_BASE_URL}/products/${id}`, {
     method: "DELETE",
   });
 }

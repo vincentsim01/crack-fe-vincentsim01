@@ -4,6 +4,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
+import { API_BASE_URL } from '@/lib/config';
 
 export default function LoginPage() {
   const [email, setEmail] = useState("john@gmail.com");
@@ -49,7 +50,7 @@ export default function LoginPage() {
     try {
       console.log('🔑 Attempting login...');
       
-      const response = await fetch('https://revoubackend6-production.up.railway.app/auth/login', {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -86,7 +87,7 @@ export default function LoginPage() {
       console.log(getCookie('auth-token'));
 
 
-      const userResponse = await fetch(`https://revoubackend6-production.up.railway.app/user/id/${userId || 'me'}/`, {
+      const userResponse = await fetch(`${API_BASE_URL}/user/id/${userId || 'me'}/`, {
         headers: {
           'Authorization': `Bearer ${getCookie('auth-token')}`,
         },

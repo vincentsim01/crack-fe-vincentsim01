@@ -1,6 +1,7 @@
 "use client"
 import React,{useState,useEffect} from 'react';
 import {useRouter} from 'next/navigation';
+import { API_BASE_URL } from '@/lib/config';
 
 
 const Page = () => {
@@ -46,7 +47,7 @@ const Page = () => {
             try {
       console.log('🔑 Attempting signup...');
       
-      const response = await fetch('https://revoubackend6-production.up.railway.app/user/signup', {
+      const response = await fetch(`${API_BASE_URL}/user/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

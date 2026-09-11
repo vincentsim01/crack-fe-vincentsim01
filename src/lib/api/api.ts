@@ -1,10 +1,12 @@
 
 // "use client";
 // const BASE_URL = 'https://api.escuelajs.co/api/v1/';
-const BASE_URL = 'https://revoubackend6-production.up.railway.app/';
 import { MockProducts } from '@/app/data/Product';
 import axios from 'axios';
+import { API_BASE_URL } from '@/lib/config';
 // import {useState, useEffect} from 'react';
+
+const BASE_URL = `${API_BASE_URL}/`;
 
 export interface Product{
     id:number;
@@ -34,6 +36,36 @@ export interface ProductFormData {
     categoryId:number;
     // images:string[];
 }
+
+export interface ShippingDestination {
+  id: number;
+  name: string;
+}
+
+export interface ShippingCostOption {
+  name?: string;
+  code?: string;
+  service?: string;
+  description?: string;
+  cost: number;
+  etd?: string;
+}
+
+export interface CalculateShippingCostBody {
+  destinationId: number;
+  weight: number;
+  originId?: number;
+  courier?: string;
+  price?: 'lowest' | 'highest';
+}
+
+const DEFAULT_ORIGIN_ID = 11025; // Jakarta Barat warehouse
+
+const authHeaders = (authToken?: string): HeadersInit => {
+  const headers: HeadersInit = { 'Content-Type': 'application/json' };
+  if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+  return headers;
+};
 
 // export async function getProduct(id:number):Promise<Product>{
 //     try{
@@ -117,5 +149,43 @@ export const api = {
     console.log(data)
     return data;
     // return response.json();
-  }
+  },
+
+  searchShippingDestinations: async (
+    search: string,
+    authToken?: string,
+    limit: number = 10
+  ): Promise<ShippingDestination[]> => {
+    const params = new URLSearchParams({ search, limit: String(limit) });
+    const response = await fetch(`${BASE_URL}shipping/destinations?${params.toString()}`, {
+      headers: authHeaders(authToken),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch shipping destinations');
+    }
+
+    const json = await response.json();
+    return (json?.data ?? json) as ShippingDestination[];
+  },
+
+  calculateShippingCost: async (
+    body: CalculateShippingCostBody,
+    authToken?: string
+  ): Promise<ShippingCostOption[]> => {
+    const response = await fetch(`${BASE_URL}shipping/cost`, {
+      method: 'POST',
+      headers: authHeaders(authToken),
+      body: JSON.stringify({ originId: DEFAULT_ORIGIN_ID, ...body }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Error response:', errorText);
+      throw new Error('Failed to calculate shipping cost');
+    }
+
+    const json = await response.json();
+    return (json?.data ?? json) as ShippingCostOption[];
+  },
 }

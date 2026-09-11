@@ -1,7 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Lock } from "lucide-react";
 import { useCart } from "@/app/context/cartContext";
+import { ShippingDestination, ShippingCostOption } from "@/lib/api/api";
+import { API_BASE_URL } from "@/lib/config";
 
 type Product = {
   id: number;
@@ -19,6 +22,15 @@ interface CheckoutItem {
   quantity?: number;
 }
 
+interface ShippingSelection {
+  recipientName?: string;
+  postalCode?: string;
+  addressType?: "home" | "office";
+  deliveryNotes?: string;
+  destination: ShippingDestination;
+  cost: ShippingCostOption;
+}
+
 const getPrice = (price: unknown) => Number(price) || 0;
 const formatPrice = (price: unknown) => getPrice(price).toFixed(2);
 
@@ -28,6 +40,7 @@ export default function PaymentPage() {
   const [total, setTotal] = useState<number>(0);
   const [paymentMethod, setPaymentMethod] = useState<string>("credit_card");
   const [transactionId, setTransactionId] = useState<number | null>(null);
+  const [shippingSelection, setShippingSelection] = useState<ShippingSelection | null>(null);
 
   const getCookie = (name: string): string | null => {
     if (typeof document === "undefined") return null;
@@ -57,7 +70,17 @@ export default function PaymentPage() {
       const totalPrice = Number(items.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2));
       setTotal(totalPrice);
     }
+
+    const storedShipping = localStorage.getItem("shippingSelection");
+    if (storedShipping) {
+      setShippingSelection(JSON.parse(storedShipping));
+    }
   }, []);
+
+  const shippingCost = shippingSelection?.cost?.cost ? Number(shippingSelection.cost.cost) : 0;
+  const grandTotal = Number((total + shippingCost).toFixed(2));
+
+
 
 
 
@@ -66,11 +89,11 @@ export default function PaymentPage() {
     console.log("User ID:", userId);
     console.log("Type of User ID:", typeof userId);
     console.log("type of userid number " + typeof Number(userId));
-    console.log("the total is" + total);
-    console.log("Type of total" + typeof total);
-    console.log("type of total parsefloat decimal " + parseFloat(total.toFixed(2)));
+    console.log("the total is" + grandTotal);
+    console.log("Type of total" + typeof grandTotal);
+    console.log("type of total parsefloat decimal " + parseFloat(grandTotal.toFixed(2)));
     try {
-      const res = await fetch("https://revoubackend6-production.up.railway.app/transactions", {
+      const res = await fetch(`${API_BASE_URL}/transactions`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -78,7 +101,7 @@ export default function PaymentPage() {
         },
         body: JSON.stringify({
           userId: Number(userId),
-          total: parseFloat(total.toFixed(2)),
+          total: parseFloat(grandTotal.toFixed(2)),
         }),
       });
       const data = await res.json();
@@ -104,7 +127,7 @@ export default function PaymentPage() {
         const isBooking = [10001, 10002, 10003].includes(item.id);
         if (isBooking) {
           // For booking items, first create a transaction-item
-          const response = await fetch("https://revoubackend6-production.up.railway.app/transaction-items", {
+          const response = await fetch(`${API_BASE_URL}/transaction-items`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -136,7 +159,7 @@ export default function PaymentPage() {
         console.log("Transaction-item created with ID:", transitid);
 
         // Then create the booking with the transaction-item ID
-        const response2 = await fetch("https://revoubackend6-production.up.railway.app/booking", {
+        const response2 = await fetch(`${API_BASE_URL}/booking`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -170,7 +193,7 @@ export default function PaymentPage() {
         return response2.json();
       } else {
         // For regular products, only create transaction-item
-        const response = await fetch("https://revoubackend6-production.up.railway.app/transaction-items", {
+        const response = await fetch(`${API_BASE_URL}/transaction-items`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -195,7 +218,7 @@ export default function PaymentPage() {
     })
     );
 
-    const paymentResponse = await fetch("https://revoubackend6-production.up.railway.app/payments", {
+    const paymentResponse = await fetch(`${API_BASE_URL}/payments`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -203,7 +226,7 @@ export default function PaymentPage() {
       },
       body: JSON.stringify({
         provider: paymentMethod,
-        amount: parseFloat(total.toFixed(2)),
+        amount: parseFloat(grandTotal.toFixed(2)),
         status: "SUCCESS",
         transactionId: Number(transId),
       }),
@@ -217,7 +240,8 @@ export default function PaymentPage() {
     checkoutItems.forEach((item) => removeFromCart(item.id));
 
     localStorage.removeItem("checkoutItems");
-    alert(`Payment successful using ${paymentMethod}! Total: $${total.toFixed(2)}`);
+    localStorage.removeItem("shippingSelection");
+    alert(`Payment successful using ${paymentMethod}! Total: $${grandTotal.toFixed(2)}`);
     router.push("/ThankYou");
   };
 
@@ -272,15 +296,42 @@ export default function PaymentPage() {
               <option value="crypto" className="bg-white text-black">Cryptocurrency</option>
             </select>
             </div>
-            <dl className="space-y-4 border-b border-black/10 py-5 text-sm dark:border-white/15"><div className="flex justify-between"><dt className="opacity-60">Subtotal</dt><dd>${total.toFixed(2)}</dd></div><div className="flex justify-between"><dt className="opacity-60">Shipping</dt><dd>Calculated at payment</dd></div></dl>
-            <div className="flex justify-between py-5 text-lg font-bold"><span>Total</span><span>${total.toFixed(2)}</span></div>
+            <dl className="space-y-4 border-b border-black/10 py-5 text-sm dark:border-white/15">
+              <div className="flex justify-between"><dt className="opacity-60">Subtotal</dt><dd>${total.toFixed(2)}</dd></div>
+              <div className="flex justify-between">
+                <dt className="opacity-60">Shipping{shippingSelection?.cost?.service ? ` (${shippingSelection.cost.name || shippingSelection.cost.code} - ${shippingSelection.cost.service})` : ""}</dt>
+                <dd>{shippingSelection ? `$${shippingCost.toFixed(2)}` : "Not selected"}</dd>
+              </div>
+              {shippingSelection?.destination && (
+                <div className="flex justify-between"><dt className="opacity-60">Deliver to</dt><dd>{shippingSelection.destination.name}</dd></div>
+              )}
+              {shippingSelection?.recipientName && (
+                <div className="flex justify-between"><dt className="opacity-60">Recipient</dt><dd>{shippingSelection.recipientName}</dd></div>
+              )}
+              {shippingSelection?.postalCode && (
+                <div className="flex justify-between"><dt className="opacity-60">Postal code</dt><dd>{shippingSelection.postalCode}</dd></div>
+              )}
+              {shippingSelection?.addressType && (
+                <div className="flex justify-between"><dt className="opacity-60">Address type</dt><dd className="capitalize">{shippingSelection.addressType}</dd></div>
+              )}
+            </dl>
+            {shippingSelection?.deliveryNotes && (
+              <div className="mt-4 border border-black/10 bg-black/[.03] p-3 text-xs dark:border-white/15 dark:bg-white/[.04]">
+                <p className="mb-1 font-semibold opacity-80">Delivery notes</p>
+                <p className="opacity-65">{shippingSelection.deliveryNotes}</p>
+              </div>
+            )}
+            <div className="flex justify-between py-5 text-lg font-bold"><span>Total</span><span>${grandTotal.toFixed(2)}</span></div>
             <button
               onClick={handlePayment}
               className="w-full bg-black py-4 text-xs font-bold uppercase tracking-[0.16em] text-white transition hover:bg-black/80 dark:bg-white dark:text-black dark:hover:bg-white/80"
             >
               Confirm Payment
             </button>
-            <p className="mt-4 text-center text-xs opacity-55">Your payment is securely processed after confirmation.</p>
+            <p className="mt-4 flex items-center justify-center gap-2 text-center text-xs opacity-55">
+              <Lock size={14} className="shrink-0" />
+              Your payment is securely processed after confirmation.
+            </p>
           </aside>
         </div>
       )}

@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { API_BASE_URL } from '@/lib/config';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
     // Forward to backend (adjust URL to match your actual backend)
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://localhost:3001';
+    const backendUrl = API_BASE_URL;
     
     const response = await fetch(`${backendUrl}/auth/login`, {
       method: 'POST',
